@@ -4,7 +4,7 @@ from datetime import datetime
 # task create pydantic model
 class TaskCreate(BaseModel):
     title : str 
-    desription : str | None = None
+    description : str | None = None
     due_date : datetime | None = None
     priority : str | None = None
 
@@ -12,7 +12,7 @@ class TaskCreate(BaseModel):
 class TaskResponse(BaseModel):
     id : int 
     title : str 
-    desription : str | None
+    description : str | None
     completed : bool 
     created_at : datetime
     due_date : datetime | None 

@@ -16,3 +16,6 @@ __pycache__/
 # OS files (Windows / Mac)
 .DS_Store
 Thumbs.db
+
+# Personal Notes 
+notes.txt
