@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.db.database import Base, engine 
-from app.models import models
+from app.orm_models import orm_models
+from app.routers.tasks import router as tasks_router
 
 # NOTE: to init the database: 
 # 1. CREATE DATABASE taskdb (done one time only!)
@@ -11,6 +12,9 @@ from app.models import models
 
 # init task-manager application
 app = FastAPI()
+
+# include tasks router CRUD functionality 
+app.include_router(tasks_router)
 
 # bind ORM schemas to engine
 Base.metadata.create_all(bind=engine)

@@ -1,5 +1,5 @@
 from app.db.database import SessionLocal 
-from app.models.models import Task
+from app.orm_models.orm_models import Task
 
 # NOTE: anytime you want to interact with your database, 
 #       you create a new session using the function SessionLocal()
