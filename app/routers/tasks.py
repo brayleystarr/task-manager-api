@@ -28,6 +28,7 @@ def create_task(task : TaskCreate, db : Session = Depends(get_db)):
         due_date = task.due_date,
         priority = task.priority
     )
+    
     # push new task to database
     db.add(new_task)
     db.commit()
