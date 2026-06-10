@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session 
 from app.db.database import SessionLocal 
 from app.orm_models.orm_models import Task 
@@ -16,9 +16,9 @@ def get_db():
     finally: 
         db.close()
 
-# NOTE : CRUD operations defined below
+# NOTE: CRUD operations defined below
 # declare task creation endpoint 
-@router.post('/tasks')
+@router.post('/tasks', status_code = status.HTTP_201_CREATED)
 def create_task(task : TaskCreate, db : Session = Depends(get_db)):  
     # convert Pydantic -> ORM 
     new_task = Task(
@@ -32,6 +32,15 @@ def create_task(task : TaskCreate, db : Session = Depends(get_db)):
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
+
+    '''
+    although databse has been updated, 
+    we return the json representation 
+    of the new task to update the UI, 
+    it now seeing fields of the new task
+    that are handled by the database. this 
+    allows us to avoide unecessary database querying
+    '''
     return new_task
 
 # declare task(s) reading endpoint

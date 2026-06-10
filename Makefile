@@ -13,5 +13,7 @@ test_verbose:
 db-size: 
 	psql -U taskuser -d taskdb -h localhost -c "SELECT COUNT(*) FROM tasks;"
 
+packages: 
+	pip freeze > requirements.txt
 
 
