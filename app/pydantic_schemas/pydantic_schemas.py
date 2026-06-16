@@ -30,3 +30,8 @@ class TaskUpdate(BaseModel):
 class UserCreate(BaseModel):
     email : str
     password : str
+
+# user response pydantic model
+class UserResponse(BaseModel):
+    id : int
+    email : str 

@@ -8,7 +8,9 @@ __pycache__/
 *.pyo
 
 # Environment variables (secrets)
-.env
+#.env
+# NOTE: Since this is a resume project, one only meant to be run from my or a recruiter's
+# local machine, there is no need to exclude the environment variables, they aren't secretive! 
 
 # IDE files (VS CODE)
 .vscode/
