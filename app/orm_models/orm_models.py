@@ -1,6 +1,6 @@
 from datetime import datetime 
 from app.db.database import Base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
 
 # declare ORM model defining task database schema
 class Task(Base):
@@ -8,6 +8,7 @@ class Task(Base):
     
     # NOTE: SQL will automatically increment the id 
     id = Column(Integer, primary_key=True, nullable=False) 
+    user_id = Column(Integer, ForeignKey("users.id"), nullable = False)
     title = Column(String, nullable=False)
     description = Column(String, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)

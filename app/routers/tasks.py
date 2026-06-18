@@ -4,11 +4,12 @@ from app.db.database import SessionLocal
 from app.orm_models.orm_models import Task 
 from app.pydantic_schemas.pydantic_schemas import TaskResponse, TaskCreate, TaskUpdate
 from typing import List
+from app.auth.jwt import get_current_user
 
 # init container for route definitions
 router = APIRouter()
 
-# maps requests to distinct db session 
+# maps HTTP requests to distinct db session 
 def get_db():
     db = SessionLocal()
     try: 
@@ -17,11 +18,16 @@ def get_db():
         db.close()
 
 # NOTE: CRUD operations defined below
-# declare task creation endpoint 
-@router.post('/tasks', status_code = status.HTTP_201_CREATED)
-def create_task(task : TaskCreate, db : Session = Depends(get_db)):  
-    # convert Pydantic -> ORM 
+ 
+@router.post('/tasks', status_code = status.HTTP_201_CREATED, response_model = TaskResponse)
+def create_task(task : TaskCreate, db : Session = Depends(get_db), current_user_id : int = Depends(get_current_user)):  
+    """
+    task creation CRUD endpoint        
+    """
+
+    # Pydantic object -> ORM object instance 
     new_task = Task(
+        user_id = current_user_id, 
         title = task.title,
         description = task.description,
         completed = False,
@@ -35,25 +41,29 @@ def create_task(task : TaskCreate, db : Session = Depends(get_db)):
     db.refresh(new_task)
 
     '''
-    although databse has been updated, 
-    we return the json representation 
-    of the new task to update the UI, 
-    it now seeing fields of the new task
-    that are handled by the database. this 
-    allows us to avoide unecessary database querying
+    NOTE: although databse has been updated, 
+          we return the json representation 
+          of the new task to update the UI, 
+          it now seeing fields of the new task
+          that are handled by the database. this 
+          allows us to avoide unecessary database querying
     '''
     return new_task
 
-# declare task(s) reading endpoint
-# NOTE : 
+
 @router.get('/tasks', response_model = List[TaskResponse])
-def get_tasks(db : Session = Depends(get_db)):
-    tasks = db.query(Task).all()
+def get_tasks(db : Session = Depends(get_db), current_user_id : int = Depends(get_current_user)):
+    """
+    list all tasks associated with given user 
+    """
+    tasks = db.query(Task).filter(Task.user_id == current_user_id)
     return tasks
 
-# declare task reading endpoint 
 @router.get('/tasks', response_model = TaskResponse)
 def get_task(task_id : int, db : Session = Depends(get_db)):
+    """
+
+    """
     task = db.query(Task).filter(Task.id == task_id).first()
 
     # invalid task id 

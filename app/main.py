@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from app.db.database import Base, engine 
 from app.orm_models import orm_models
 from app.routers.tasks import router as tasks_router
+from dotenv import load_dotenv
+
+# allow access to environment variables
+load_dotenv()
 
 # NOTE: to init the database: 
 # 1. CREATE DATABASE taskdb (done one time only!)
