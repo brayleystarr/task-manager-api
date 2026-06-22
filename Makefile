@@ -1,19 +1,25 @@
-reset_db: 
-	python3 -m app.db.reset_db
+# database commands
+db-reset: 
+	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb -f app/db/reset_db.sql
 
+db-shell: 
+	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb
+
+db-view: 
+	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb -f app/db/view_db.sql
+
+# FastAPI commands
 run: 
 	uvicorn app.main:app --reload
 
 test: 
 	PYTHONPATH=. pytest
 
-test_verbose: 
+test-verbose: 
 	PYTHONPATH=. pytest -v
 
-db-size: 
-	psql -U taskuser -d taskdb -h localhost -c "SELECT COUNT(*) FROM tasks;"
-
-packages: 
+# other commands
+update-packages: 
 	pip freeze > requirements.txt
 
-
+	

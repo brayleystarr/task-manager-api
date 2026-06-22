@@ -25,5 +25,8 @@ Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def root():
+    """
+    API root endpoint
+    """
     return {"message" : "Hello World!"}
 

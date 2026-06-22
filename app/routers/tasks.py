@@ -60,23 +60,30 @@ def get_tasks(db : Session = Depends(get_db), current_user_id : int = Depends(ge
     return tasks
 
 @router.get('/tasks', response_model = TaskResponse)
-def get_task(task_id : int, db : Session = Depends(get_db)):
+def get_task(task_id : int, db : Session = Depends(get_db), current_user_id : int = Depends(get_current_user)):
+    """
+    list specific task of specific user 
     """
 
-    """
-    task = db.query(Task).filter(Task.id == task_id).first()
+    # fetch first instance of task with given user and task id 
+    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
 
-    # invalid task id 
+    # task not found 
     if not task: 
         raise HTTPException(status_code = 404, detail = f"Task {task_id} not found")
+    
     # output valid task id 
     return task 
 
-# declare task updating endpoint 
+
 @router.patch('/tasks/{task_id}', response_model = TaskResponse)
-def update_task(task_id : int, task_update : TaskUpdate, db : Session = Depends(get_db)):
+def update_task(task_id : int, task_update : TaskUpdate, db : Session = Depends(get_db), current_user_id = Depends(get_current_user)):
+    """
+    update given task under given user
+    """
+
     # fetch the task to update 
-    task = db.query(Task).filter(Task.id ==  task_id).first()
+    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
 
     # handle missing tasks 
     if not task: 
@@ -85,7 +92,7 @@ def update_task(task_id : int, task_update : TaskUpdate, db : Session = Depends(
     # cast update request -> dictionary 
     update_data = task_update.model_dump(exclude_unset = True)
 
-    # apply updates 
+    # apply updates
     for key, value in update_data.items():
         setattr(task, key, value)
 
@@ -98,10 +105,15 @@ def update_task(task_id : int, task_update : TaskUpdate, db : Session = Depends(
     # return the updated task (FastAPI converts via response_model)
     return task 
 
+
 @router.delete('/tasks/{task_id}')
-def delete_task(task_id : int, db : Session = Depends(get_db)):
+def delete_task(task_id : int, db : Session = Depends(get_db), current_user_id = Depends(get_current_user)):
+    """
+    delete given task under given user
+    """
+
     # fetch task to delete 
-    task = db.query(Task).filter(Task.id == task_id).first()
+    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
 
     # client wishes to delete unexisting task 
     if not task: 

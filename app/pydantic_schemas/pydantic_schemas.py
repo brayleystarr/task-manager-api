@@ -36,3 +36,13 @@ class UserCreate(BaseModel):
 class UserResponse(BaseModel):
     id : int
     email : str 
+
+# token response pydantic model 
+class Token(BaseModel):
+    access_token : str
+    token_type : str
+
+# user login pydantic model 
+class UserLogin(BaseModel):
+    email : str 
+    password : str
