@@ -1,32 +1,33 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from app.db.database import Base, engine 
 from app.orm_models import orm_models
 from app.routers.tasks import router as tasks_router
+from app.routers.users import router as users_router
 from dotenv import load_dotenv
 
-# allow access to environment variables
+# fetch environment variables
 load_dotenv()
 
-# NOTE: to init the database: 
-# 1. CREATE DATABASE taskdb (done one time only!)
-# 2. connect engine to taskdb (using connective string)
-# 3. define database schema(s)
-# 4. create_all() (converts models -> SQL)
-# 5. PostgreSQL executes CREATE TABLE statements
-
-# init task-manager application
+# init task-manager app
 app = FastAPI()
+
+# serve directory of frontend files 
+app.mount("/static", StaticFiles(directory = "frontend"), name = "static")
 
 # include tasks router CRUD functionality 
 app.include_router(tasks_router)
 
-# bind ORM schemas to engine
+# include user router CRUD functionality
+app.include_router(users_router)
+
+# bind ORM class to engine
 Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def root():
     """
-    API root endpoint
+    root endpoint, direct to user creation page
     """
-    return {"message" : "Hello World!"}
-
+    return FileResponse("frontend/create_user.html")

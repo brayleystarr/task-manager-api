@@ -14,13 +14,13 @@ router = APIRouter()
 @router.post('/users', status_code = status.HTTP_201_CREATED, response_model = UserResponse)
 def create_user(user : UserCreate, db : Session = Depends(get_db)):
     """
-    user registration endpoint
+    User registration endpoint.
     """
 
-    # convert Pydantic model -> ORM model 
+    # cast Pydantic schema -> ORM model 
     new_user = User(
         email = user.email, 
-        password = hash_password(user.password)
+        hashed_password = hash_password(user.password)
     )
 
     # has this user already made an account?
@@ -41,11 +41,14 @@ def create_user(user : UserCreate, db : Session = Depends(get_db)):
     # return JSON response
     return new_user
 
-@router.post('/login', response_model = Token)
+@router.post('/sessions', response_model = Token)
 def login_user(user : UserLogin, db : Session = Depends(get_db)):
+    """
+    User login endpoint.
+    """
 
     # fetch user from databse
-    db_user = db.query(User).filter(User.email == user.email).first()
+    db_user = db.query(User).filter(User.email == user.email).first()  
 
     # user not found
     if not db_user: 
@@ -55,7 +58,7 @@ def login_user(user : UserLogin, db : Session = Depends(get_db)):
         )
     
     # verify correct password 
-    if not verify_password(user.password, db_user.password): 
+    if not verify_password(user.password, db_user.hashed_password): 
         raise HTTPException(
             status_code = status.HTTP_401_UNAUTHORIZED, 
             detail = "Could not validate credentials", 

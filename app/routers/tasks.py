@@ -9,7 +9,7 @@ from app.auth.jwt import get_current_user
 # init container for route definitions
 router = APIRouter()
 
-# maps HTTP requests to distinct db session 
+# map HTTP request to distinct db session 
 def get_db():
     db = SessionLocal()
     try: 
@@ -18,7 +18,6 @@ def get_db():
         db.close()
 
 # NOTE: CRUD operations defined below
- 
 @router.post('/tasks', status_code = status.HTTP_201_CREATED, response_model = TaskResponse)
 def create_task(task : TaskCreate, db : Session = Depends(get_db), current_user_id : int = Depends(get_current_user)):  
     """
