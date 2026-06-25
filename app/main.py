@@ -6,12 +6,22 @@ from app.orm_models import orm_models
 from app.routers.tasks import router as tasks_router
 from app.routers.users import router as users_router
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 # fetch environment variables
 load_dotenv()
 
 # init task-manager app
 app = FastAPI()
+
+# add CORSMiddleware 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # serve directory of frontend files 
 app.mount("/static", StaticFiles(directory = "frontend"), name = "static")
