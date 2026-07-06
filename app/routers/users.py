@@ -4,7 +4,7 @@ from app.db.database import SessionLocal
 from app.orm_models.orm_models import User
 from app.pydantic_schemas.pydantic_schemas import UserCreate, UserResponse, Token, UserLogin
 from app.routers.tasks import get_db
-from app.auth.hashing import hash_password, verify_password
+from app.auth.auth import hash_password, verify_password
 from app.auth.jwt import create_access_token
 
 # init container for route definitions

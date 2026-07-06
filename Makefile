@@ -9,8 +9,11 @@ db-view:
 	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb -f app/db/view_db.sql
 
 # FastAPI commands
-run: 
+run-dev: 
 	uvicorn app.main:app --reload
+
+run-prod: 
+	uvicorn app.main:app 
 
 test: 
 	PYTHONPATH=. pytest
