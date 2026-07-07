@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from app.db.database import Base, engine 
 from app.orm_models import orm_models
@@ -24,7 +24,7 @@ app.add_middleware(
 )
 
 # serve directory of frontend files 
-app.mount("/static", StaticFiles(directory = "frontend"), name = "static")
+app.mount("/static", StaticFiles(directory = "static"), name = "static")
 
 # include tasks router CRUD functionality 
 app.include_router(tasks_router)
@@ -38,6 +38,22 @@ Base.metadata.create_all(bind=engine)
 @app.get("/")
 def root():
     """
-    root endpoint, direct to user creation page
+    Root endpoint, redirects user to registration page
     """
-    return FileResponse("frontend/create_user.html")
+    return RedirectResponse(url="/register")
+
+@app.get("/register")
+def register_page():
+    """
+    User registration page. 
+    """
+    return FileResponse("static/create_user.html")
+
+# NOTE: DELETE LATER, this is to simply test the 
+#       user login logic '
+@app.get("/testing")
+def testing_page():
+    """
+    User registration page. 
+    """
+    return FileResponse("static/test.html")

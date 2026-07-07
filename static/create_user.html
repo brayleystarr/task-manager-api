@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html> 
     <head> 
-        <title> User Authentication </title>
+        <title> Register </title>
+        <link rel="stylesheet" href="static/styles.css">
     </head>
         <body> 
         <form id="loginForm" > 
             <fieldset> 
-                <legend>User Authentication</legend>
+                <legend>User Registration</legend>
                 <label>Email:<br />
                 <input type="email" name="email" maxlength = "30" /></label><br />
                 <label>Password:<br />
-                <input type="password" name="password" maxlength = "30" /></label>
+                <input type="password" name="password" maxlength = "30" /></label><br />
                 <button type="submit" id="register-btn">Register</button>
                 <button type="submit" id="login-btn">Login</button>
             </fieldset>
         </form> 
-    <script src="create_user.js"></script>
+    <script src="static/create_user.js"></script>
     </body>
 </html>

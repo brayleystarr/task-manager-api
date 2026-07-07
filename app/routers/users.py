@@ -5,7 +5,7 @@ from app.orm_models.orm_models import User
 from app.pydantic_schemas.pydantic_schemas import UserCreate, UserResponse, Token, UserLogin
 from app.routers.tasks import get_db
 from app.auth.auth import hash_password, verify_password
-from app.auth.jwt import create_access_token
+from app.auth.auth import create_access_token
 
 # init container for route definitions
 router = APIRouter()
@@ -30,7 +30,7 @@ def create_user(user : UserCreate, db : Session = Depends(get_db)):
     if existing_user: 
         raise HTTPException(
             status_code = status.HTTP_400_BAD_REQUEST, 
-            detail = f"Email {user.email} already registered"
+            detail = f"Email {user.email} has already been registered!"
         )
 
     # push new task to database 
@@ -73,3 +73,5 @@ def login_user(user : UserLogin, db : Session = Depends(get_db)):
         "access_token" : access_token, 
         "token_type" : "bearer"
     }
+
+    
