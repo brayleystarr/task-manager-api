@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session 
 from app.db.database import SessionLocal 
-from app.orm_models.orm_models import Task 
-from app.pydantic_schemas.pydantic_schemas import TaskResponse, TaskCreate, TaskUpdate
+from app.models.models import Task 
+from app.schemas.pydantic_schemas import TaskResponse, TaskCreate, TaskUpdate
 from typing import List
-from app.auth.jwt import get_current_user
+from app.auth.auth import get_current_user
 
 # init container for route definitions
 router = APIRouter()
@@ -65,7 +65,7 @@ def get_task(task_id : int, db : Session = Depends(get_db), current_user_id : in
     """
 
     # fetch first instance of task with given user and task id 
-    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
+    task = db.query(Task).filter(Task.user_id == task_id, Task.user_id == current_user_id).first()
 
     # task not found 
     if not task: 
@@ -82,7 +82,7 @@ def update_task(task_id : int, task_update : TaskUpdate, db : Session = Depends(
     """
 
     # fetch the task to update 
-    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
+    task = db.query(Task).filter(Task.user_id == task_id, Task.user_id == current_user_id).first()
 
     # handle missing tasks 
     if not task: 
@@ -112,7 +112,7 @@ def delete_task(task_id : int, db : Session = Depends(get_db), current_user_id =
     """
 
     # fetch task to delete 
-    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user_id).first()
+    task = db.query(Task).filter(Task.user_id == task_id, Task.user_id == current_user_id).first()
 
     # client wishes to delete unexisting task 
     if not task: 

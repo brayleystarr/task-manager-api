@@ -1,10 +1,9 @@
-document.getElementById("register-btn").addEventListener("click", async () => {
-  
+document.getElementById("login-btn").addEventListener("click", async () => {
   const email = document.querySelector('input[name="email"]').value;
   const password = document.querySelector('input[name="password"]').value;
 
   try {
-    const response = await fetch("/users", {
+    const response = await fetch("/sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -13,15 +12,17 @@ document.getElementById("register-btn").addEventListener("click", async () => {
     const data = await response.json();
 
     if (!response.ok) {
-      alert(data.detail || "Registration failed");
+      alert(data.detail || "Login failed");
       return;
     }
 
-    // success — redirect to login
-    window.location.href = "/login";
+    // successful user login -> assign JWT 
+    const token = data.access_token
+    localStorage.setItem("token", token)
+
+
+    window.location.href = "/"; // home page will be implemented later 
   } catch (err) {
     alert("Something went wrong. Please try again.");
   }
 });
-
-

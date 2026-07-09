@@ -10,12 +10,12 @@ from passlib.context import CryptContext
 
 load_dotenv()
 
-# NOTE: this allows us to fetch the JWT from the HTTP header
-OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl = "login")
+OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl = "login") # allows JWT to be fetched from HTTP header
 SECRET_KEY = os.getenv("SECRET_KEY")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto") # encryption algo for passwords
 ALGORITHM = os.getenv("ALGORITHM") # encryption algo for JWTs 
+
 
 def hash_password(password : str) -> str:
     """Hash a plaintext password using brcypt.""" 
@@ -36,7 +36,7 @@ def create_access_token(user_data : dict) -> str:
     # init JWT
     encoded_jwt = jwt.encode(
         to_encode,  
-        SECRET_KEY,  
+        str(SECRET_KEY),  
         algorithm = ALGORITHM)
 
     return encoded_jwt        
@@ -46,7 +46,6 @@ def get_current_user(token: str = Depends(OAUTH2_SCHEME)):
     """
     Identify a specific user from a JWT.
     """
-
     credentials_exception = HTTPException(
         status_code = status.HTTP_401_UNAUTHORIZED, 
         detail = "Could not validate credentials", 

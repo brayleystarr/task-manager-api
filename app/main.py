@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from app.db.database import Base, engine 
-from app.orm_models import orm_models
+from app.models import models
 from app.routers.tasks import router as tasks_router
 from app.routers.users import router as users_router
 from dotenv import load_dotenv
@@ -40,7 +40,8 @@ def root():
     """
     Root endpoint, redirects user to registration page
     """
-    return RedirectResponse(url="/register")
+    return FileResponse("static/home_page.html")
+
 
 @app.get("/register")
 def register_page():
@@ -49,11 +50,20 @@ def register_page():
     """
     return FileResponse("static/create_user.html")
 
-# NOTE: DELETE LATER, this is to simply test the 
-#       user login logic '
-@app.get("/testing")
-def testing_page():
+
+@app.get("/login")
+def register_page():
     """
     User registration page. 
     """
-    return FileResponse("static/test.html")
+    return FileResponse("static/login_user.html")
+
+
+@app.get("/home")
+def register_page():
+    """
+    User registration page. 
+    """
+    return FileResponse("/") # this will be changed later to serve the home-page, 
+                             # the actual place where you will modify tasks 
+
