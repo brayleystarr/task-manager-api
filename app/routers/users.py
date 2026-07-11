@@ -1,12 +1,13 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session 
 
 from app.db.database import SessionLocal 
 from app.models.models import User
-from app.schemas.pydantic_schemas import UserCreate, UserResponse, Token, UserLogin
+from app.schemas.pydantic_schemas import UserCreate, UserResponse, Token, UserLogin, TokenVerify
 from app.routers.tasks import get_db
-from app.auth.auth import hash_password, verify_password
-from app.auth.auth import create_access_token
+from app.auth.auth import hash_password, verify_password, get_current_user, create_access_token
 
 
 # init container for route definitions
@@ -38,7 +39,7 @@ def create_user(user : UserCreate, db : Session = Depends(get_db)):
     db.refresh(new_user)
     
     
-@router.post('/sessions', response_model = Token)
+@router.post('/sessions') #, response_model = Token)
 def login_user(user : UserLogin, db : Session = Depends(get_db)):
     """
     User login endpoint.
@@ -63,7 +64,15 @@ def login_user(user : UserLogin, db : Session = Depends(get_db)):
         )
 
     # give JWT to user
-    access_token = create_access_token({"user_id" : db_user.user_id})
-    return {"access_token" : access_token, "token_type" : "bearer"}
+    token = create_access_token({"user_id" : db_user.user_id })
+    return {"token" : token}
+
+
+@router.get('/me')
+def verify_token(current_user: dict = Depends(get_current_user)):
+    return {"valid_token": True}
+
+
+
 
     

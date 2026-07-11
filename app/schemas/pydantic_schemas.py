@@ -53,3 +53,8 @@ class Token(BaseModel):
 class UserLogin(BaseModel):
     email : str 
     password : str
+
+
+# token verification pydantic model
+class TokenVerify(BaseModel):
+    token : str

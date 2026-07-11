@@ -1,6 +1,7 @@
 # database commands
 db-reset: 
 	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb -f app/db/reset_db.sql
+	python3 -m app.db.database
 
 db-shell: 
 	PGPASSWORD=password psql -h localhost -U taskuser -d taskdb

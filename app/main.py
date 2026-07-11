@@ -59,11 +59,11 @@ def register_page():
     return FileResponse("static/login_user.html")
 
 
-@app.get("/home")
+@app.get("/menu")
 def register_page():
     """
     User registration page. 
     """
-    return FileResponse("/") # this will be changed later to serve the home-page, 
+    return FileResponse("static/main_menu.html") # this will be changed later to serve the home-page, 
                              # the actual place where you will modify tasks 
 
